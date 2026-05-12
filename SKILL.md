@@ -1,286 +1,188 @@
-# Quality Engineering Framework — Skill Guide
-
-## Context
-
-This framework supports a **Testing Specialist** embedded in an agile team delivering on **Salesforce Sales Cloud**. It defines how quality engineering is practiced, shared, and measured across the full delivery lifecycle.
-
+---
+name: quality-engineering-agile
+description: Apply quality engineering practices to agile user stories, epics, and defects in Jira. Use this skill whenever the user shares a Jira ticket, user story, acceptance criteria, requirement, epic, bug report, or asks for help with story refinement, testability review, test case design, risk analysis, defect analysis, or shift-left quality activities. Trigger this skill even when the user just pastes ticket content without explicitly asking for "testing" — quality engineering applies to any agile artifact. Also trigger for phrases like "refine this story," "is this ready for dev," "what could go wrong," "what test cases do I need," "review acceptance criteria," or "analyze this defect."
 ---
 
-## Core Principles
+# Quality Engineering for Agile Teams
 
-### 1. Quality Is a Team Responsibility
+A shift-left quality engineering framework for analyzing agile artifacts (user stories, epics, defects) in Jira. The goal is to prevent defects, not just find them — by improving stories before development, designing risk-based tests, and learning from defects.
 
-Quality is not owned by testers — it is a shared obligation across developers, BAs, admins, architects, and product owners.
+> **Foundation:** This skill operationalises the six principles defined in [`../SKILL.md`](../SKILL.md) — Quality as a team responsibility, Shift Left, Define Done Together, Make Quality Visible, Coverage as a shared design decision, and Hold Suppliers to the Same Standards. Read that file for the Salesforce Sales Cloud context, the QE touchpoints table, and the canonical BDD Gherkin template used in Section 6 (Test Cases) of the output format below.
 
-- Every team member is accountable for the quality of what they deliver
-- Testers act as quality coaches and advocates, not gatekeepers
-- Pull requests, story acceptance, and releases are team checkpoints, not QA handoff points
-- Defects are team metrics, not individual failures
+## When to use this skill
 
-**In practice:** Bug triage, retrospective quality reviews, and test coverage discussions involve the whole team — not just QE.
+Apply this skill whenever you encounter:
+- A user story or epic (with or without acceptance criteria)
+- A bug report or defect ticket
+- A requirements document or feature spec
+- A request for test case design, test strategy, or risk analysis
+- A "ready for dev" or "definition of ready" review request
+- A retrospective or post-incident analysis
+- A request to "run three amigos", "review from all angles", "check from business, dev and test perspective", or "is this three-amigos ready?"
 
----
+## Core workflow
 
-### 2. Shift Left — Prevent, Don't Just Detect
+Pick the workflow that matches the artifact type. If the artifact is ambiguous or contains multiple types (e.g., an epic with embedded bugs), ask the user which workflow they want first.
 
-Find problems earlier, where the cost to fix is lowest. The earlier a defect is caught, the cheaper and faster it is to resolve.
+1. **User Story / Requirement** → read `workflows/story-review.md`
+2. **Defect / Bug Ticket** → read `workflows/defect-analysis.md`
+3. **Epic / Feature** → read `workflows/epic-analysis.md`
+4. **Test Case Design** (when story is approved and ready) → read `workflows/test-design.md`
+5. **Three Amigos session** (pre-sprint alignment across Business, Dev, and QA) → read `workflows/three-amigos.md`
 
-- Requirements and user stories are reviewed for testability before sprint planning
-- Test cases are written alongside — or before — development begins (BDD / TDD where applicable)
-- Salesforce configuration changes (flows, validation rules, page layouts) are reviewed pre-deployment, not post
-- Acceptance criteria are agreed before a story enters a sprint
+## Reference material
 
-**In practice:** QE attends story grooming, contributes to AC definition, and flags ambiguity before work starts.
+Load these on demand:
+- `references/nfr-checklist.md` — Non-functional requirements checklist (perf, security, a11y, compliance)
+- `references/test-design-techniques.md` — EP, BVA, decision tables, state transition, pairwise, exploratory
+- `references/ac-examples.md` — Before/after rewrites of weak acceptance criteria
 
----
+If a reference file is not available, follow the inline guidance below.
 
-### 3. Define Done Together
+## Output format
 
-The Definition of Done (DoD) is a shared contract, not a QE checklist appended at the end.
+Always structure the output as a Jira-pasteable comment with these sections (omit sections that don't apply):
 
-- DoD is co-authored by developers, testers, BAs, and product owners
-- It includes: unit tests pass, integration tests pass, exploratory testing complete, AC verified, no critical open defects, documentation updated
-- Stories are not "done" until all DoD criteria are met — not when code is merged
-- DoD is reviewed and updated each PI/sprint retrospective
+```
+## Quality Engineering Analysis
 
-**In practice:** The DoD is visible on the team board. No story moves to Done without explicit sign-off against every criterion.
+**Verdict:** [Ready for Dev | Needs Refinement | Blocked]
 
----
+### 1. Story Quality (INVEST check)
+- Independent: ✅/⚠️/❌ <reason>
+- Negotiable: ✅/⚠️/❌
+- Valuable: ✅/⚠️/❌
+- Estimable: ✅/⚠️/❌
+- Small: ✅/⚠️/❌
+- Testable: ✅/⚠️/❌
 
-### 4. Make Quality Visible
+### 2. Acceptance Criteria Review
+<list each AC, flag gaps, suggest rewrites in Given/When/Then format>
 
-Quality signals must be observable, not buried in spreadsheets or tribal knowledge.
+### 3. Missing Scenarios
+<edge cases, negative paths, non-functional concerns>
 
-- Test results, coverage metrics, and defect trends are radiated to the whole team
-- A quality dashboard is maintained showing: pass/fail rates, open defects by severity, test automation health, and release readiness
-- Salesforce deployment validation results (CI/CD pipeline) are visible to all stakeholders
-- Quality health is a standing agenda item in sprint reviews and stakeholder demos
+### 4. Risk Analysis
+| Risk | Likelihood | Impact | Mitigation |
 
-**In practice:** No surprises at release time. Quality status is always current and accessible.
+### 5. Test Approach
+<unit / API / UI / exploratory split, automation recommendation>
 
----
+### 6. Test Cases
+<Full Gherkin format — Feature block, Background (if shared preconditions exist), one Scenario per behaviour, Scenario Outline for data-driven cases. Follow the canonical template in ../SKILL.md § "Skill: Evaluate a User Story and Generate BDD Gherkin Test Cases". Always cover: happy path, alternate path, negative/error path, boundary/edge case.>
 
-### 5. Test Coverage Is a Shared Design Decision
+### 7. Open Questions for PO/Dev
+<numbered list>
 
-Coverage is not a number to hit — it is a risk-informed decision made by the team together.
-
-- The team agrees which scenarios are highest risk and must have automated coverage
-- Salesforce-specific coverage targets (e.g. Apex test coverage ≥75%) are treated as a floor, not a ceiling
-- Exploratory testing charters are prioritised based on business risk, not just technical complexity
-- Test debt is tracked alongside technical debt and addressed in backlog refinement
-
-**In practice:** Coverage gaps are surfaced in planning. The team decides what to cover based on value, risk, and effort — not percentage targets alone.
-
----
-
-### 6. Hold Suppliers to the Same Standards
-
-Third-party vendors, Salesforce ISV packages, and external integrations are subject to the same quality bar as internal development.
-
-- Acceptance criteria and DoD apply equally to supplier-delivered work
-- Vendor releases are tested in a non-production sandbox before promotion
-- Integration contracts (APIs, data flows) have agreed test coverage requirements
-- Supplier defect SLAs are defined, tracked, and escalated when breached
-
-**In practice:** "It's the vendor's code" is not an exemption. QE validates supplier deliverables against the same standards applied to internal work.
-
----
-
-## Salesforce Sales Cloud — QE Touchpoints
-
-| Delivery Stage | QE Activity |
-|---|---|
-| Backlog Grooming | Review ACs for testability; flag ambiguity |
-| Sprint Planning | Confirm DoD; assign test ownership; estimate test effort |
-| Development | Write/update test cases; pair on BDD scenarios; review config changes |
-| Sprint Testing | Execute exploratory charters; run regression; validate ACs |
-| Release / Deployment | Validate in staging sandbox; confirm CI/CD pipeline green; sign off DoD |
-| Retrospective | Review defect trends; update DoD; surface quality debt |
-
----
-
-## Quality Metrics (Minimum Viable Set)
-
-| Metric | Purpose |
-|---|---|
-| Defect Escape Rate | Defects found in production vs. caught pre-release |
-| Automation Pass Rate | Health of the regression suite |
-| Defect Age | Time from opened to resolved |
-| Test Coverage by Risk Area | Risk-informed coverage, not just line coverage |
-| Blocked Stories (QE) | Stories waiting on test sign-off — signals bottlenecks |
-| Supplier Defect SLA Compliance | Vendor delivery quality |
-
----
-
-## Skill: Evaluate a User Story and Generate BDD Gherkin Test Cases
-
-### Step 1 — Evaluate the User Story for Testability
-
-Before writing any test cases, assess the story against these criteria:
-
-| Check | Question to Ask |
-|---|---|
-| **Clear Actor** | Is it obvious who is performing the action? |
-| **Defined Action** | Is the behaviour specific and unambiguous? |
-| **Measurable Outcome** | Can we objectively verify the result? |
-| **Acceptance Criteria Present** | Are ACs written and agreed? |
-| **Edge Cases Considered** | Are negative paths, boundary values, and error states acknowledged? |
-| **Salesforce Data Context** | Are the required record types, profiles, and permission sets identified? |
-| **Dependencies Identified** | Are external systems, flows, or integrations named? |
-
-**Flag and resolve** any gaps before writing Gherkin — untestable stories produce untestable scenarios.
-
----
-
-### Step 2 — Identify Scenario Categories
-
-For every user story, derive scenarios across four categories:
-
-1. **Happy Path** — the primary success flow as the actor intends
-2. **Alternate Path** — valid variations (different input, different role, optional steps)
-3. **Negative / Error Path** — invalid input, missing data, permission denial, system errors
-4. **Boundary / Edge Case** — limits, maximum values, empty states, duplicate records
-
----
-
-### Step 3 — Write Gherkin Scenarios
-
-Use standard Gherkin syntax. Keep each scenario focused on one behaviour.
-
-```gherkin
-Feature: [Feature Name — maps to the user story title]
-
-  Background:
-    Given [shared precondition that applies to all scenarios in this feature]
-
-  Scenario: [Happy path — descriptive name]
-    Given [system state or user context before the action]
-    When  [the action the user performs]
-    Then  [the observable outcome that confirms success]
-    And   [additional verifiable outcome if needed]
-
-  Scenario: [Alternate path]
-    Given ...
-    When  ...
-    Then  ...
-
-  Scenario: [Negative path]
-    Given ...
-    When  ...
-    Then  [the system should show an error / prevent the action / log the failure]
-
-  Scenario Outline: [Data-driven scenario]
-    Given [context with <variable>]
-    When  [action with <variable>]
-    Then  [outcome with <expected>]
-
-    Examples:
-      | variable        | expected        |
-      | value_1         | outcome_1       |
-      | value_2         | outcome_2       |
+### 8. Definition of Done Checklist
+<tailored to this story>
 ```
 
----
+Keep it tight. A test lead will paste this into Jira — wordiness kills usefulness.
 
-### Step 4 — Salesforce Sales Cloud Example
+## Inline guidance (when reference files are unavailable)
 
-**User Story:**
-> As a Sales Rep, I want to convert a qualified Lead into an Account, Contact, and Opportunity so that I can track the sales engagement in Sales Cloud.
+### Story Review Framework
 
-**Evaluation:**
-- Actor: Sales Rep (profile confirmed — standard Sales Rep permission set)
-- Action: Lead conversion via standard Salesforce Convert button
-- Outcome: Account, Contact, and Opportunity records created and linked
-- ACs: Duplicate rule must fire if matching Account exists; Opportunity stage defaults to "Qualification"
-- Dependencies: Duplicate Management rules, Lead Assignment rules, Opportunity record type
+Use **INVEST** to evaluate the story itself:
+- **Independent** — Can it be delivered without waiting on another story?
+- **Negotiable** — Is there room for the team to shape implementation?
+- **Valuable** — Is the user/business value explicit?
+- **Estimable** — Does the team have enough info to size it?
+- **Small** — Can it fit in one sprint? (Rule of thumb: < 5 days of work)
+- **Testable** — Can you write a passing/failing test for every AC?
 
----
+For acceptance criteria, prefer **Given/When/Then** (Gherkin) format. Flag ACs that are vague ("should be fast", "user-friendly"), untestable ("works correctly"), or hide multiple behaviors in one statement.
 
-```gherkin
-Feature: Lead Conversion in Salesforce Sales Cloud
+### Risk-Based Test Prioritization
 
-  Background:
-    Given I am logged in as a user with the "Sales Rep" profile
-    And a Lead record exists with Status "Qualified" and all required fields populated
+For every story, identify risks across these dimensions:
+- **Functional risk** — Core business logic, money/data calculations, integrations
+- **Security risk** — Auth, authorization, PII, injection points, secrets
+- **Performance risk** — Load, response time, concurrency, large datasets
+- **Compatibility risk** — Browsers, devices, OS versions, screen sizes
+- **Data risk** — Migration, corruption, loss, GDPR/retention
+- **UX/Accessibility risk** — WCAG, keyboard nav, screen readers, i18n/l10n
+- **Operational risk** — Monitoring, alerting, rollback, feature flags
 
-  Scenario: Successfully convert a Lead with no duplicate Account
-    Given no existing Account matches the Lead's Company name
-    When I click "Convert" on the Lead record
-    And I accept the default Account, Contact, and Opportunity names
-    And I set the Opportunity Close Date and confirm conversion
-    Then a new Account record is created with the Lead's Company name
-    And a new Contact record is created linked to the Account
-    And a new Opportunity record is created with Stage "Qualification"
-    And the Lead Status is updated to "Converted"
+Score each: Likelihood (L/M/H) × Impact (L/M/H). Focus deep testing on H×H and H×M.
 
-  Scenario: Convert a Lead and link to an existing Account
-    Given an Account already exists matching the Lead's Company name
-    When I click "Convert" on the Lead record
-    And I select the existing Account from the duplicate match list
-    Then no duplicate Account is created
-    And the new Contact is linked to the existing Account
-    And the Lead Status is updated to "Converted"
+### Test Case Design Heuristics
 
-  Scenario: Attempt conversion without a required Opportunity field
-    Given I am on the Lead Convert page
-    When I clear the Opportunity Close Date field
-    And I click "Convert"
-    Then conversion is blocked
-    And a field validation error is displayed for Close Date
+Always cover these case types per story:
+1. **Happy path** — The primary AC, working end-to-end
+2. **Alternate paths** — Other valid ways to accomplish the goal
+3. **Negative cases** — Invalid input, missing data, unauthorized users
+4. **Boundary cases** — Min/max values, empty/null, off-by-one
+5. **Error handling** — Timeouts, network failures, downstream errors
+6. **Concurrency** — Two users editing the same thing, race conditions
+7. **State transitions** — Resuming, refreshing, back button, session expiry
+8. **Non-functional** — At least one perf, security, and a11y check per story
 
-  Scenario: Sales Rep cannot convert a Lead owned by another user without permission
-    Given the Lead is owned by a different Sales Rep
-    And my profile does not include "Modify All" on Leads
-    When I navigate to the Lead record
-    Then the "Convert" button is not visible
+Use the **test pyramid**: push tests down. If a check can live as a unit test, don't make it a UI test.
 
-  Scenario Outline: Lead conversion sets Opportunity Stage based on Lead Source
-    Given the Lead has Lead Source "<lead_source>"
-    When I convert the Lead
-    Then the Opportunity Stage defaults to "<expected_stage>"
+### Defect Analysis Framework
 
-    Examples:
-      | lead_source     | expected_stage  |
-      | Web             | Qualification   |
-      | Partner Referral| Prospecting     |
-      | Cold Call       | Qualification   |
-```
+For any bug ticket, produce:
+1. **Reproduction quality** — Are steps clear? Environment specified? Data attached?
+2. **Severity vs Priority** — Severity = technical impact; Priority = business urgency. Don't conflate.
+3. **Root cause category** — Requirements gap | Design flaw | Code defect | Test gap | Environment | Data
+4. **Escape analysis** — Why didn't existing tests catch this? What test should we add?
+5. **Regression risk** — What else could be affected by the fix?
+6. **Prevention** — What process change would have caught this earlier (shift-left)?
 
----
+### Definition of Ready (DoR) Checklist
 
-### Step 5 — Gherkin Quality Checklist
+Before a story enters a sprint:
+- [ ] User value is clear (As a... I want... So that...)
+- [ ] Acceptance criteria are written and testable
+- [ ] Dependencies identified and unblocked
+- [ ] Test data needs identified
+- [ ] NFRs (performance, security, a11y) explicitly considered
+- [ ] Designs/mocks attached if UI involved
+- [ ] API contracts agreed if cross-team
 
-Before handing scenarios to the team, verify:
+### Definition of Done (DoD) Checklist
 
-- [ ] Each scenario tests **one behaviour only** — no compound `And` chains that test multiple things
-- [ ] Steps are written from the **user's perspective**, not the implementation's
-- [ ] No UI detail in steps (avoid "I click the blue button") — describe intent, not mechanics
-- [ ] Salesforce-specific data (record types, profiles, field names) matches the actual org configuration
-- [ ] Negative scenarios cover all AC rejection conditions
-- [ ] `Scenario Outline` used wherever the same flow is repeated with different data
-- [ ] Feature file name and feature title match the user story reference for traceability
+Before a story can be closed:
+- [ ] All AC verified
+- [ ] Unit tests written and passing
+- [ ] Integration/API tests updated
+- [ ] Automated regression added where appropriate
+- [ ] Exploratory testing session completed
+- [ ] NFRs verified (perf, security scan, a11y check)
+- [ ] Documentation updated (user-facing or technical)
+- [ ] Observability in place (logs, metrics, alerts)
+- [ ] Feature flag / rollback plan if risky
+- [ ] PO accepted demo
 
----
+## Tone and style
 
-## Guiding Behaviours
+- Be a peer reviewer, not a gatekeeper. Frame gaps as "consider also..." not "you forgot..."
+- Be specific. "AC #2 doesn't define what 'valid email' means — RFC 5322 or just regex?" beats "ACs need more detail."
+- Quantify when possible. "This story touches the payments module — historical defect rate here is high, recommend pair-testing with dev."
+- Cite the principle when useful (INVEST, ISO 25010, OWASP, WCAG) so the team learns.
 
-- **Speak up early.** If a story is untestable, say so before sprint starts.
-- **Make risk explicit.** When skipping coverage, log the risk decision.
-- **Automate what is stable.** Manual regression on stable flows is waste.
-- **Test in production-like environments.** Salesforce sandbox tiers matter — test in the right one.
-- **Champion the user.** Every test case represents a real Salesforce user journey.
+## Anti-patterns to flag
+
+When reviewing stories, watch for and call out:
+- **Tech tasks masquerading as stories** ("Add new column to DB" — what user value?)
+- **Solutionizing in the AC** (prescribes HOW instead of WHAT)
+- **Compound stories** (multiple "and"s in the title = should be split)
+- **Untestable ACs** ("the system should be reliable")
+- **Missing happy path** (only edge cases listed)
+- **No NFR consideration** (performance, security, a11y never mentioned)
+- **Hidden assumptions** (assumes the user is logged in, has data, is on desktop)
 
 ---
 
 ## Related Skills
 
-The principles and BDD skill above are the foundation. For applying them to specific agile artifact types (user stories, defects, epics), use the detailed workflow skill:
-
-| When you have... | Use this |
+| Need | Where to go |
 |---|---|
-| A Jira user story, epic, or defect to review | [`quality-engineering-agile/SKILL.md`](quality-engineering-agile/SKILL.md) — full INVEST check, risk analysis, AC review, Gherkin output |
-| A story ready for test design | [`quality-engineering-agile/SKILL.md`](quality-engineering-agile/SKILL.md) → `workflows/test-design.md` |
-| An NFR coverage question | [`quality-engineering-agile/references/nfr-checklist.md`](quality-engineering-agile/references/nfr-checklist.md) |
-| A BDD scenario to write from scratch | **Skill: Evaluate a User Story and Generate BDD Gherkin Test Cases** — Steps 1–5 in this file |
-
-The agile skill produces Jira-pasteable output structured around the same six principles defined here. The BDD Gherkin section in this file is the canonical template referenced by `quality-engineering-agile/SKILL.md` Step 6 (Test Cases).
+| Six QE principles + Salesforce Sales Cloud context | [`../SKILL.md`](../SKILL.md) |
+| BDD Gherkin template and step-by-step scenario writing | [`../SKILL.md`](../SKILL.md) — *Skill: Evaluate a User Story and Generate BDD Gherkin Test Cases* |
+| NFR checklist (perf, security, a11y, compliance) | [`references/nfr-checklist.md`](references/nfr-checklist.md) |
+| Test design techniques (EP, BVA, decision tables, state transition) | [`references/test-design-techniques.md`](references/test-design-techniques.md) |
+| AC rewrite examples | [`references/ac-examples.md`](references/ac-examples.md) |
+| Validated test outputs against the full 10-ticket test set | [`test-set-results.md`](test-set-results.md) |
